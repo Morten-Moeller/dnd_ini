@@ -5,9 +5,11 @@ import { GroupFields } from "../types/GroupFields.ts";
 import { IGroup } from "../types/IGroup.ts";
 import { LocalStorageKeys } from "../types/LocalStorageKeys.ts";
 import { fromLocalStorage } from "../utils/localStorage.ts";
+import { useNavigate } from "react-router-dom";
 
 export const PlayPage: FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [roundCounter, setRoundCounter] = useState(1);
 
@@ -22,7 +24,7 @@ export const PlayPage: FC = () => {
     <main style={{ minHeight: 400, maxWidth: 1100, width: "100%" }}>
       <Flex vertical>
           <Flex justify={'space-between'}>
-            <Button>{t('Back')}</Button>
+            <Button onClick={() => navigate('/')}>{t('Back')}</Button>
               <Typography.Title  style={{ margin: 0 }} level={2}>{group[GroupFields.GroupName]}</Typography.Title>
             <Button>{t('Clear')}</Button>
           </Flex>
