@@ -1,3 +1,23 @@
 {
-  "translation": {}
+  "translation": {
+    "Title": "Zulgors Initiative Manager",
+    "NewGroup": "New Group",
+    "NoGroupFound": "No Group Found",
+    "GroupNameLabel": "Group Name",
+    "NameLabel": "Character Name",
+    "AddGroup": "Add Group",
+    "Back": "Back",
+    "Clear": "Clear",
+    "Round": "Round",
+    "Init": "Init",
+    "Add": "Add",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Hide": "Hide",
+    "Show": "Show",
+    "Name": "Name"
+  },
+  "validation": {
+    "MissingName": "Character name missing"
+  }
 }
