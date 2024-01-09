@@ -22,6 +22,7 @@ export const LandingPage: FC = () => {
   },[])
 
   useEffect(() => {
+    if(groups.length === 0) return;
     toLocalStorage(LocalStorageKeys.Groups, groups);
   },[groups])
 
@@ -54,7 +55,7 @@ export const LandingPage: FC = () => {
             {t("Title")}
           </Title>
           <Select
-            style={{ width: 60 }}
+            style={{ width: 'max-content' }}
             defaultValue={currentLanguage as Languages}
             onChange={handleChangeLanguage}
             options={[
