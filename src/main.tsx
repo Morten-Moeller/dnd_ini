@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         theme={{
           token: {
             colorPrimary: "#128EDB",
+            colorSplit: "#808080",
           },
         }}
       >
