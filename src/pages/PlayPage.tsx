@@ -150,7 +150,7 @@ export const PlayPage: FC = () => {
   };
 
   return (
-    <main style={{ minHeight: 400, maxWidth: 1100, width: "100%" }}>
+    <main style={{ minHeight: 400, maxWidth: 900, width: "100%" }}>
       <Flex vertical>
         <Flex justify={"space-between"}>
           <Button onClick={() => navigate("/")}>{t("Back")}</Button>

@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { fromLocalStorage, toLocalStorage } from "../utils/localStorage.ts";
 import { LocalStorageKeys } from "../types/LocalStorageKeys.ts";
 
-
 export const LandingPage: FC = () => {
   const { Title } = Typography;
   const [openGroup, setOpenGroup] = useState(false);
@@ -18,14 +17,13 @@ export const LandingPage: FC = () => {
 
   useEffect(() => {
     const groups = fromLocalStorage(LocalStorageKeys.Groups);
-    if(groups) setGroups(groups);
-  },[])
+    if (groups) setGroups(groups);
+  }, []);
 
   useEffect(() => {
-    if(groups.length === 0) return;
+    if (groups.length === 0) return;
     toLocalStorage(LocalStorageKeys.Groups, groups);
-  },[groups])
-
+  }, [groups]);
 
   const {
     t,
@@ -40,22 +38,22 @@ export const LandingPage: FC = () => {
 
   const handleAddGroup = (values: IGroup) => {
     setGroups([...groups, values]);
-  }
+  };
 
   const handleGroupSelection = (group: IGroup) => {
-    toLocalStorage(LocalStorageKeys.Group, group)
-    navigate('/play');
-  }
+    toLocalStorage(LocalStorageKeys.Group, group);
+    navigate("/play");
+  };
 
   return (
-    <main style={{ minHeight: 400, maxWidth: 1100, width: "100%" }}>
+    <main style={{ minHeight: 400, maxWidth: 900, width: "100%" }}>
       <Flex vertical gap={"large"}>
         <Flex justify={"space-between"}>
           <Title level={2} style={{ margin: 0 }}>
             {t("Title")}
           </Title>
           <Select
-            style={{ width: 'max-content' }}
+            style={{ width: "max-content" }}
             defaultValue={currentLanguage as Languages}
             onChange={handleChangeLanguage}
             options={[
@@ -67,25 +65,40 @@ export const LandingPage: FC = () => {
         <Flex gap={"middle"}>
           <section style={{ flex: 2 }}>
             <Card style={{ minHeight: 400 }}>
-              <Flex gap={'large'} vertical align={'start'}>
-                <Button onClick={ () => setOpenGroup(true)} disabled={openGroup} type={"primary"}>{t("NewGroup")}</Button>
-                <NewGroupForm open={openGroup} setOpen={setOpenGroup} onAddGroup={handleAddGroup} />
+              <Flex gap={"large"} vertical align={"start"}>
+                <Button
+                  onClick={() => setOpenGroup(true)}
+                  disabled={openGroup}
+                  type={"primary"}
+                >
+                  {t("NewGroup")}
+                </Button>
+                <NewGroupForm
+                  open={openGroup}
+                  setOpen={setOpenGroup}
+                  onAddGroup={handleAddGroup}
+                />
               </Flex>
             </Card>
           </section>
           <aside style={{ flex: 1 }}>
             <Card style={{ minHeight: 400 }}>
-              {groups.length === 0
-                ? t("NoGroupFound")
-                : groups.map((group) => (
-                  <Button key={group[GroupFields.GroupName]} onClick={()=>handleGroupSelection(group)}>
-                  {group[GroupFields.GroupName]}
-                </Button>
-                ))}
+              <Flex vertical gap={"middle"}>
+                {groups.length === 0
+                  ? t("NoGroupFound")
+                  : groups.map((group) => (
+                      <Button
+                        key={group[GroupFields.GroupName]}
+                        onClick={() => handleGroupSelection(group)}
+                      >
+                        {group[GroupFields.GroupName]}
+                      </Button>
+                    ))}
+              </Flex>
             </Card>
           </aside>
         </Flex>
       </Flex>
     </main>
   );
-}
+};

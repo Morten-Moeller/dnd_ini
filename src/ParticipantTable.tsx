@@ -1,5 +1,5 @@
 import { IParticipant } from "./types/IParticipant.ts";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { Button, Flex, Spin } from "antd";
 import { ParticipantButton } from "./ParticipantButton.tsx";
 import { useTranslation } from "react-i18next";
