@@ -99,6 +99,9 @@ export const LandingPage: FC = () => {
           </aside>
         </Flex>
       </Flex>
+      <Flex justify={"center"} style={{ marginTop: 24 }}>
+        <Typography.Text type={"secondary"}>v0.0.1</Typography.Text>
+      </Flex>
     </main>
   );
 };
