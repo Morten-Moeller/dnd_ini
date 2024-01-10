@@ -6,3 +6,7 @@ todo:
 - [ ] edit participants
 - [ ] save round and turn to local storage
 - [ ] restore player ini on refresh
+- [ ] add 2nd mode to add battles in addition to groups
+- [ ] menu hide button for battle mode
+- [ ] remove group / battle
+
