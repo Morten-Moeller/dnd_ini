@@ -131,6 +131,24 @@ export const PlayPage: FC = () => {
     setTurn(1);
   };
 
+  const handleIsDead = (participant: IParticipant, isDead: boolean) => {
+    if (!participantsGroup) return;
+
+    const updatedParticipants = participantsGroup.participants.map((p) => {
+      if (p.id === participant.id) {
+        return { ...p, isDead };
+      }
+      return p;
+    });
+
+    const updatedParticipantsGroup: IParticipantGroup = {
+      ...participantsGroup,
+      participants: updatedParticipants,
+    };
+
+    setParticipantsGroup(updatedParticipantsGroup);
+  };
+
   return (
     <main style={{ minHeight: 400, maxWidth: 1100, width: "100%" }}>
       <Flex vertical>
@@ -148,9 +166,10 @@ export const PlayPage: FC = () => {
           {t("Round")}: {roundCounter}
         </Typography.Title>
         <Flex gap={"middle"}>
-          <section style={{ flex: 2 }}>
+          <section style={{ flexBasis: 450 }}>
             <Card style={{ minHeight: 400 }}>
               <ParticipantTable
+                handleIsDead={handleIsDead}
                 participants={participantsGroup.participants}
                 setRound={setRoundCounter}
                 round={roundCounter}

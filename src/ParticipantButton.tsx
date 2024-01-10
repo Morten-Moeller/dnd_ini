@@ -1,24 +1,35 @@
 import { IParticipant } from "./types/IParticipant.ts";
 import { FC, useState } from "react";
-import { Button, Divider, Flex, Typography } from "antd";
+import { Button, Divider, Flex, theme, Typography } from "antd";
 
 interface IParticipantButtonProps {
   participant: IParticipant;
   index: number;
   turn: number;
+  handleIsDead: (participant: IParticipant, isDead: boolean) => void;
 }
 
 export const ParticipantButton: FC<IParticipantButtonProps> = ({
   participant,
   index,
   turn,
+  handleIsDead,
 }) => {
-  const [isDead, setIsDead] = useState(false);
+  const [isDead, setIsDead] = useState(participant.isDead);
   const { Text } = Typography;
+  const { useToken } = theme;
+  const { token } = useToken();
+
+  const handleClick = () => {
+    setIsDead(!isDead);
+    handleIsDead(participant, !isDead);
+  };
+
   return (
     <Button
       type={turn === index ? "primary" : "default"}
-      onClick={() => setIsDead(!isDead)}
+      onClick={handleClick}
+      style={isDead ? { backgroundColor: token.colorErrorBg } : {}}
     >
       <Flex gap={"small"} justify={"space-between"} align={"center"}>
         <Text>{index + 1})</Text>

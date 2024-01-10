@@ -10,6 +10,7 @@ interface IParticipantTableProps {
   round: number;
   turn: number;
   setTurn: Dispatch<SetStateAction<number>>;
+  handleIsDead: (participant: IParticipant, isDead: boolean) => void;
 }
 
 export const ParticipantTable: FC<IParticipantTableProps> = ({
@@ -18,40 +19,66 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
   round,
   turn,
   setTurn,
+  handleIsDead,
 }) => {
   const { t } = useTranslation();
 
   if (!participants) return <Spin />;
 
   const handleNextClick = () => {
-    if (turn === participants.length) {
-      setTurn(1);
-      setRound((round) => round + 1);
+    let newTurn = turn;
+    const totalParticipants = participants.length || 0;
+    let count = 0; // Zähler für die Durchgänge
+
+    while (count < totalParticipants) {
+      newTurn = newTurn >= totalParticipants ? 1 : newTurn + 1;
+      if (newTurn === turn || !participants[newTurn - 1].isDead) {
+        break;
+      }
+
+      count++;
+    }
+    if (count === totalParticipants) {
       return;
     }
-    setTurn(turn + 1);
+    setTurn(newTurn);
+
+    if (newTurn === 1) {
+      setRound((round) => round + 1);
+    }
   };
 
   const handlePreviousClick = () => {
-    if (turn > 1) {
-      setTurn(turn - 1);
+    let newTurn = turn;
+    const totalParticipants = participants.length || 0;
+    let count = 0; // Zähler für die Durchgänge
+
+    while (count < totalParticipants) {
+      newTurn = newTurn <= 1 ? totalParticipants : newTurn - 1;
+
+      if (newTurn === turn || !participants[newTurn - 1].isDead) {
+        break;
+      }
+      count++;
+    }
+    if (count === totalParticipants) {
       return;
     }
-    if (round === 1) {
-      setTurn(1);
-      return;
+    setTurn(newTurn);
+
+    if (newTurn === totalParticipants) {
+      setRound((round) => round - 1);
     }
-    setTurn(participants.length);
-    setRound((round) => round - 1);
   };
 
   return (
     <>
-      <Flex vertical gap={"middle"} style={{ width: 300 }}>
+      <Flex vertical gap={"middle"} style={{ width: 400 }}>
         {participants
           .sort((a, b) => b.initiative - a.initiative)
           .map((participant: IParticipant, index) => (
             <ParticipantButton
+              handleIsDead={handleIsDead}
               key={participant.id}
               participant={participant}
               index={index}
@@ -59,7 +86,7 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
             />
           ))}
       </Flex>
-      <Flex justify={"space-between"} style={{ width: 300, marginTop: 24 }}>
+      <Flex justify={"space-between"} style={{ width: 400, marginTop: 24 }}>
         <Button
           disabled={round === 1 && turn === 1}
           onClick={handlePreviousClick}
