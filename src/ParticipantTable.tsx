@@ -8,15 +8,18 @@ interface IParticipantTableProps {
   participants?: IParticipant[] | null;
   setRound: Dispatch<SetStateAction<number>>;
   round: number;
+  turn: number;
+  setTurn: Dispatch<SetStateAction<number>>;
 }
 
 export const ParticipantTable: FC<IParticipantTableProps> = ({
   participants,
   setRound,
   round,
+  turn,
+  setTurn,
 }) => {
   const { t } = useTranslation();
-  const [turn, setTurn] = useState<number>(1);
 
   if (!participants) return <Spin />;
 

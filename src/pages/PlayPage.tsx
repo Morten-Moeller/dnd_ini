@@ -28,6 +28,7 @@ export const PlayPage: FC = () => {
   const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [roundCounter, setRoundCounter] = useState(1);
+  const [turn, setTurn] = useState(1);
   const [participantsGroup, setParticipantsGroup] =
     useState<IParticipantGroup | null>(null);
 
@@ -112,6 +113,24 @@ export const PlayPage: FC = () => {
     setParticipantsGroup(updatedParticipantsGroup);
   };
 
+  const clearParticipants = () => {
+    if (!participantsGroup) return;
+    const newParticipantsGroup: IParticipantGroup = {
+      groupName: group[GroupFields.GroupName], // Der Gruppenname aus dem `group` Objekt
+      participants: group[GroupFields.Characters].map(
+        (character: ICharacter) => ({
+          name: character.name,
+          initiative: 0,
+          isDead: false,
+          id: uuidv4(),
+        }),
+      ),
+    };
+    setParticipantsGroup(newParticipantsGroup);
+    setRoundCounter(1);
+    setTurn(1);
+  };
+
   return (
     <main style={{ minHeight: 400, maxWidth: 1100, width: "100%" }}>
       <Flex vertical>
@@ -120,7 +139,7 @@ export const PlayPage: FC = () => {
           <Typography.Title style={{ margin: 0 }} level={2}>
             {group[GroupFields.GroupName]}
           </Typography.Title>
-          <Button>{t("Clear")}</Button>
+          <Button onClick={clearParticipants}>{t("Clear")}</Button>
         </Flex>
         <Typography.Title
           level={4}
@@ -135,6 +154,8 @@ export const PlayPage: FC = () => {
                 participants={participantsGroup.participants}
                 setRound={setRoundCounter}
                 round={roundCounter}
+                turn={turn}
+                setTurn={setTurn}
               />
             </Card>
           </section>
