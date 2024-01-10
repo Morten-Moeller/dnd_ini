@@ -6,16 +6,22 @@ import { IGroup } from "../types/IGroup.ts";
 import { LocalStorageKeys } from "../types/LocalStorageKeys.ts";
 import { fromLocalStorage } from "../utils/localStorage.ts";
 import { useNavigate } from "react-router-dom";
+import { ICharacter } from "../types/ICharacter.ts";
+import { IParticipant } from "../types/IParticipant.ts";
+import { ParticipantTable } from "../ParticipantTable.tsx";
 
 export const PlayPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [roundCounter, setRoundCounter] = useState(1);
+  const [participants, setParticipants] = useState<IParticipant[] | null>(null);
 
   useEffect(() => {
     const group = fromLocalStorage(LocalStorageKeys.Group);
     if(group) setGroup(group);
+    const newParticipants = (group[GroupFields.Characters]).map((character: ICharacter) => ({name: character.name, initiative: 0, isDead: false}));
+    setParticipants(newParticipants)
   },[])
 
   if(!group) return <Spin />
@@ -32,7 +38,7 @@ export const PlayPage: FC = () => {
         <Flex gap={"middle"}>
           <section style={{ flex: 2 }}>
             <Card style={{ minHeight: 400 }}>
-
+              <ParticipantTable participants={participants} setRound={setRoundCounter} round={roundCounter} />
             </Card>
           </section>
           <aside style={{ flex: 1 }}>
@@ -68,7 +74,6 @@ export const PlayPage: FC = () => {
           </aside>
         </Flex>
       </Flex>
-
     </main>
   )
 
