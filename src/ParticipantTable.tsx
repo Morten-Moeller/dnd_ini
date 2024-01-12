@@ -1,6 +1,7 @@
 import { IParticipant } from "./types/IParticipant.ts";
 import { Dispatch, FC, SetStateAction } from "react";
 import { Button, Flex, Spin } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import { ParticipantButton } from "./ParticipantButton.tsx";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +13,8 @@ interface IParticipantTableProps {
   setTurn: Dispatch<SetStateAction<number>>;
   handleIsDead: (participant: IParticipant, isDead: boolean) => void;
   showDead: boolean;
+  isEdit: boolean;
+  onRemoveParticipant: (idToDelete: string) => void;
 }
 
 export const ParticipantTable: FC<IParticipantTableProps> = ({
@@ -21,7 +24,9 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
   turn,
   setTurn,
   handleIsDead,
-    showDead
+  showDead,
+  isEdit,
+  onRemoveParticipant,
 }) => {
   const { t } = useTranslation();
 
@@ -75,25 +80,34 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
 
   const filterDead = (participants: IParticipant) => {
     if (showDead) {
-      return true
+      return true;
     }
-    return !participants.isDead
-  }
+    return !participants.isDead;
+  };
 
   return (
     <>
       <Flex vertical gap={"middle"} style={{ width: 400 }}>
         {participants
           .sort((a, b) => b.initiative - a.initiative)
-            .filter(filterDead)
+          .filter(filterDead)
           .map((participant: IParticipant, index) => (
-            <ParticipantButton
-              handleIsDead={handleIsDead}
-              key={participant.id}
-              participant={participant}
-              index={index}
-              turn={turn - 1}
-            />
+            <Flex gap={"middle"}>
+              <ParticipantButton
+                style={{ flex: 1 }}
+                handleIsDead={handleIsDead}
+                key={participant.id}
+                participant={participant}
+                index={index}
+                turn={turn - 1}
+              />
+              {isEdit && !participant.isCharacter && (
+                <Button
+                  onClick={() => onRemoveParticipant(participant.id)}
+                  icon={<DeleteOutlined />}
+                />
+              )}
+            </Flex>
           ))}
       </Flex>
       <Flex justify={"space-between"} style={{ width: 400, marginTop: 24 }}>

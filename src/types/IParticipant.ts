@@ -3,4 +3,5 @@ export interface IParticipant {
   initiative: number;
   isDead: boolean;
   id: string;
+  isCharacter?: boolean;
 }

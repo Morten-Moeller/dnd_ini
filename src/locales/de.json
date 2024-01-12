@@ -15,7 +15,10 @@
     "Next": "Nächster",
     "Hide": "Ausblenden",
     "Show": "Anzeigen",
-    "Name": "Name"
+    "Name": "Name",
+    "ShowDead": "ShowDead",
+    "HideDead": "HideDead",
+    "EditParticipants": "Beteiligte bearbeiten",
   },
   "validation": {
     "MissingName": "Charaktername fehlt"

@@ -1,5 +1,5 @@
 import { IParticipant } from "./types/IParticipant.ts";
-import { FC, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 import { Button, Divider, Flex, theme, Typography } from "antd";
 
 interface IParticipantButtonProps {
@@ -7,6 +7,7 @@ interface IParticipantButtonProps {
   index: number;
   turn: number;
   handleIsDead: (participant: IParticipant, isDead: boolean) => void;
+  style?: CSSProperties;
 }
 
 export const ParticipantButton: FC<IParticipantButtonProps> = ({
@@ -14,6 +15,7 @@ export const ParticipantButton: FC<IParticipantButtonProps> = ({
   index,
   turn,
   handleIsDead,
+  style,
 }) => {
   const [isDead, setIsDead] = useState(participant.isDead);
   const { Text } = Typography;
@@ -29,7 +31,7 @@ export const ParticipantButton: FC<IParticipantButtonProps> = ({
     <Button
       type={turn === index ? "primary" : "default"}
       onClick={handleClick}
-      style={isDead ? { backgroundColor: token.colorErrorBg } : {}}
+      style={isDead ? { backgroundColor: token.colorErrorBg, ...style } : style}
     >
       <Flex gap={"small"} justify={"space-between"} align={"center"}>
         <Text>{index + 1})</Text>

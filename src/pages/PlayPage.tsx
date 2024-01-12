@@ -22,6 +22,7 @@ import { ParticipantTable } from "../ParticipantTable.tsx";
 import { ParticipantKeys } from "../types/ParticipantKeys.ts";
 import { v4 as uuidv4 } from "uuid";
 import { IParticipantGroup } from "../types/IParticipantGroup.ts";
+import { ParticipantsGroupFields } from "../types/ParticipantsGroupFields.ts";
 
 export const PlayPage: FC = () => {
   const { t } = useTranslation();
@@ -29,7 +30,8 @@ export const PlayPage: FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const [roundCounter, setRoundCounter] = useState(1);
   const [turn, setTurn] = useState(1);
-  const [showDead, setShowDead] = useState<boolean>(true)
+  const [showDead, setShowDead] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [participantsGroup, setParticipantsGroup] =
     useState<IParticipantGroup | null>(null);
 
@@ -64,6 +66,7 @@ export const PlayPage: FC = () => {
           initiative: 0,
           isDead: false,
           id: uuidv4(),
+          isCharacter: true,
         }),
       ),
     };
@@ -97,14 +100,14 @@ export const PlayPage: FC = () => {
   const handleIniChange = (value: number | null, name: string) => {
     if (!participantsGroup || value === null) return;
 
-    const updatedParticipants = participantsGroup.participants.map(
-      (participant) => {
-        if (participant.name === name) {
-          return { ...participant, initiative: value };
-        }
-        return participant;
-      },
-    );
+    const updatedParticipants = participantsGroup[
+      ParticipantsGroupFields.Participants
+    ].map((participant) => {
+      if (participant.name === name) {
+        return { ...participant, initiative: value };
+      }
+      return participant;
+    });
 
     const updatedParticipantsGroup: IParticipantGroup = {
       ...participantsGroup,
@@ -150,6 +153,18 @@ export const PlayPage: FC = () => {
     setParticipantsGroup(updatedParticipantsGroup);
   };
 
+  const handleDeleteParticipant = (idToDelete: string) => {
+    if (!participantsGroup) return;
+    const updatedParticipants = participantsGroup.participants.filter(
+      (participant: IParticipant) => participant.id !== idToDelete,
+    );
+    setParticipantsGroup({
+      [ParticipantsGroupFields.GroupName]:
+        participantsGroup[ParticipantsGroupFields.GroupName],
+      [ParticipantsGroupFields.Participants]: updatedParticipants,
+    });
+  };
+
   return (
     <main style={{ minHeight: 400, maxWidth: 900, width: "100%" }}>
       <Flex vertical>
@@ -177,6 +192,8 @@ export const PlayPage: FC = () => {
                 turn={turn}
                 setTurn={setTurn}
                 showDead={showDead}
+                isEdit={isEdit}
+                onRemoveParticipant={handleDeleteParticipant}
               />
             </Card>
           </section>
@@ -205,7 +222,12 @@ export const PlayPage: FC = () => {
               </Form>
               <Divider />
               <Form layout={"vertical"}>
-                <Button onClick={() => setShowDead(!showDead)}>{showDead ? t('HideDead') : t('ShowDead') }</Button>
+                <Button onClick={() => setShowDead(!showDead)}>
+                  {showDead ? t("HideDead") : t("ShowDead")}
+                </Button>
+                <Button onClick={() => setIsEdit(!isEdit)}>
+                  {t("EditParticipants")}
+                </Button>
                 <Flex vertical gap={"middle"}>
                   {group[GroupFields.Characters].map((character, index) => (
                     <Flex

@@ -1,6 +1,7 @@
 import { IParticipant } from "./IParticipant.ts";
+import { ParticipantsGroupFields } from "./ParticipantsGroupFields.ts";
 
 export interface IParticipantGroup {
-  participants: IParticipant[];
-  groupName: string;
+  [ParticipantsGroupFields.Participants]: IParticipant[];
+  [ParticipantsGroupFields.GroupName]: string;
 }
