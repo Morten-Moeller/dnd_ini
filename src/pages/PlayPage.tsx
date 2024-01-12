@@ -32,6 +32,7 @@ export const PlayPage: FC = () => {
   const [turn, setTurn] = useState(1);
   const [showDead, setShowDead] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [hideMenu, setHideMenu] = useState<boolean>(false);
   const [participantsGroup, setParticipantsGroup] =
     useState<IParticipantGroup | null>(null);
 
@@ -184,73 +185,88 @@ export const PlayPage: FC = () => {
         <Flex gap={"middle"}>
           <section style={{ flexBasis: 450 }}>
             <Card style={{ minHeight: 400 }}>
-              <ParticipantTable
-                handleIsDead={handleIsDead}
-                participants={participantsGroup.participants}
-                setRound={setRoundCounter}
-                round={roundCounter}
-                turn={turn}
-                setTurn={setTurn}
-                showDead={showDead}
-                isEdit={isEdit}
-                onRemoveParticipant={handleDeleteParticipant}
-              />
+              <Flex
+                style={{ minHeight: 350 }}
+                vertical
+                justify={"space-between"}
+                gap={"middle"}
+              >
+                <ParticipantTable
+                  handleIsDead={handleIsDead}
+                  participants={participantsGroup.participants}
+                  setRound={setRoundCounter}
+                  round={roundCounter}
+                  turn={turn}
+                  setTurn={setTurn}
+                  showDead={showDead}
+                  isEdit={isEdit}
+                  onRemoveParticipant={handleDeleteParticipant}
+                />
+                <Button
+                  style={{ marginTop: "auto" }}
+                  onClick={() => setHideMenu(!hideMenu)}
+                >
+                  Toggle Menu
+                </Button>
+              </Flex>
             </Card>
           </section>
-          <aside style={{ flex: 1 }}>
-            <Card style={{ minHeight: 400 }}>
-              <Form layout={"vertical"} onFinish={addItem}>
-                <Flex gap={"small"} style={{ marginBottom: 12 }}>
-                  <Form.Item
-                    name={ParticipantKeys.Name}
-                    label={t("Name")}
-                    style={{ flex: 3, margin: 0 }}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    name={ParticipantKeys.Initiative}
-                    label={t("Init")}
-                    style={{ flex: 1, margin: 0 }}
-                  >
-                    <InputNumber />
-                  </Form.Item>
-                </Flex>
-                <Button htmlType="submit" style={{ width: "100%" }}>
-                  {t("Add")}
-                </Button>
-              </Form>
-              <Divider />
-              <Form layout={"vertical"}>
-                <Button onClick={() => setShowDead(!showDead)}>
-                  {showDead ? t("HideDead") : t("ShowDead")}
-                </Button>
-                <Button onClick={() => setIsEdit(!isEdit)}>
-                  {t("EditParticipants")}
-                </Button>
-                <Flex vertical gap={"middle"}>
-                  {group[GroupFields.Characters].map((character, index) => (
-                    <Flex
-                      key={character.name}
-                      justify={"end"}
-                      gap={"middle"}
-                      align={"center"}
+          {!hideMenu && (
+            <aside style={{ flex: 1 }}>
+              <Card style={{ minHeight: 400 }}>
+                <Form layout={"vertical"} onFinish={addItem}>
+                  <Flex gap={"small"} style={{ marginBottom: 12 }}>
+                    <Form.Item
+                      name={ParticipantKeys.Name}
+                      label={t("Name")}
+                      style={{ flex: 3, margin: 0 }}
                     >
-                      <Typography.Text>{character.name}</Typography.Text>
-                      <Form.Item key={index} style={{ margin: 0, width: 80 }}>
-                        <InputNumber
-                          controls={false}
-                          onChange={(value) =>
-                            handleIniChange(value as number, character.name)
-                          }
-                        />
-                      </Form.Item>
-                    </Flex>
-                  ))}
-                </Flex>
-              </Form>
-            </Card>
-          </aside>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name={ParticipantKeys.Initiative}
+                      label={t("Init")}
+                      style={{ flex: 1, margin: 0 }}
+                    >
+                      <InputNumber />
+                    </Form.Item>
+                  </Flex>
+                  <Button htmlType="submit" style={{ width: "100%" }}>
+                    {t("Add")}
+                  </Button>
+                </Form>
+                <Divider />
+                <Form layout={"vertical"}>
+                  <Button onClick={() => setShowDead(!showDead)}>
+                    {showDead ? t("HideDead") : t("ShowDead")}
+                  </Button>
+                  <Button onClick={() => setIsEdit(!isEdit)}>
+                    {t("EditParticipants")}
+                  </Button>
+                  <Flex vertical gap={"middle"}>
+                    {group[GroupFields.Characters].map((character, index) => (
+                      <Flex
+                        key={character.name}
+                        justify={"end"}
+                        gap={"middle"}
+                        align={"center"}
+                      >
+                        <Typography.Text>{character.name}</Typography.Text>
+                        <Form.Item key={index} style={{ margin: 0, width: 80 }}>
+                          <InputNumber
+                            controls={false}
+                            onChange={(value) =>
+                              handleIniChange(value as number, character.name)
+                            }
+                          />
+                        </Form.Item>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Form>
+              </Card>
+            </aside>
+          )}
         </Flex>
       </Flex>
     </main>
