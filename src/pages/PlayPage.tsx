@@ -29,6 +29,7 @@ export const PlayPage: FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const [roundCounter, setRoundCounter] = useState(1);
   const [turn, setTurn] = useState(1);
+  const [showDead, setShowDead] = useState<boolean>(true)
   const [participantsGroup, setParticipantsGroup] =
     useState<IParticipantGroup | null>(null);
 
@@ -175,6 +176,7 @@ export const PlayPage: FC = () => {
                 round={roundCounter}
                 turn={turn}
                 setTurn={setTurn}
+                showDead={showDead}
               />
             </Card>
           </section>
@@ -203,6 +205,7 @@ export const PlayPage: FC = () => {
               </Form>
               <Divider />
               <Form layout={"vertical"}>
+                <Button onClick={() => setShowDead(!showDead)}>{showDead ? t('HideDead') : t('ShowDead') }</Button>
                 <Flex vertical gap={"middle"}>
                   {group[GroupFields.Characters].map((character, index) => (
                     <Flex

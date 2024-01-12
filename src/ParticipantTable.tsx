@@ -11,6 +11,7 @@ interface IParticipantTableProps {
   turn: number;
   setTurn: Dispatch<SetStateAction<number>>;
   handleIsDead: (participant: IParticipant, isDead: boolean) => void;
+  showDead: boolean;
 }
 
 export const ParticipantTable: FC<IParticipantTableProps> = ({
@@ -20,6 +21,7 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
   turn,
   setTurn,
   handleIsDead,
+    showDead
 }) => {
   const { t } = useTranslation();
 
@@ -71,11 +73,19 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
     }
   };
 
+  const filterDead = (participants: IParticipant) => {
+    if (showDead) {
+      return true
+    }
+    return !participants.isDead
+  }
+
   return (
     <>
       <Flex vertical gap={"middle"} style={{ width: 400 }}>
         {participants
           .sort((a, b) => b.initiative - a.initiative)
+            .filter(filterDead)
           .map((participant: IParticipant, index) => (
             <ParticipantButton
               handleIsDead={handleIsDead}
