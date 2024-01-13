@@ -28,7 +28,7 @@ export const PlayPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
-  const [roundCounter, setRoundCounter] = useState(1);
+  const [round, setRound] = useState(1);
   const [turn, setTurn] = useState(1);
   const [showDead, setShowDead] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -133,7 +133,7 @@ export const PlayPage: FC = () => {
       ),
     };
     setParticipantsGroup(newParticipantsGroup);
-    setRoundCounter(1);
+    setRound(1);
     setTurn(1);
   };
 
@@ -181,7 +181,7 @@ export const PlayPage: FC = () => {
           level={4}
           style={{ textAlign: "center", margin: "8px 0 24px 0" }}
         >
-          {t("Round")}: {roundCounter}
+          {t("Round")}: {round}
         </Typography.Title>
         <Flex gap={"middle"}>
           <section style={{ flexBasis: 450 }}>
@@ -196,8 +196,8 @@ export const PlayPage: FC = () => {
                   handleIsDead={handleIsDead}
                   onIniChange={handleIniChange}
                   participants={participantsGroup.participants}
-                  setRound={setRoundCounter}
-                  round={roundCounter}
+                  setRound={setRound}
+                  round={round}
                   turn={turn}
                   setTurn={setTurn}
                   showDead={showDead}
