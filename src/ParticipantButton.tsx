@@ -7,7 +7,9 @@ interface IParticipantButtonProps {
   index: number;
   turn: number;
   handleIsDead: (participant: IParticipant, isDead: boolean) => void;
+  disabled?: boolean;
   style?: CSSProperties;
+  mode?: "edit" | "play";
 }
 
 export const ParticipantButton: FC<IParticipantButtonProps> = ({
@@ -15,12 +17,15 @@ export const ParticipantButton: FC<IParticipantButtonProps> = ({
   index,
   turn,
   handleIsDead,
+  disabled,
   style,
+  mode = "play",
 }) => {
   const [isDead, setIsDead] = useState(participant.isDead);
   const { Text } = Typography;
   const { useToken } = theme;
   const { token } = useToken();
+  const isEditMode = mode === "edit";
 
   const handleClick = () => {
     setIsDead(!isDead);
@@ -29,6 +34,7 @@ export const ParticipantButton: FC<IParticipantButtonProps> = ({
 
   return (
     <Button
+      disabled={disabled}
       type={turn === index ? "primary" : "default"}
       onClick={handleClick}
       style={isDead ? { backgroundColor: token.colorErrorBg, ...style } : style}
@@ -36,10 +42,12 @@ export const ParticipantButton: FC<IParticipantButtonProps> = ({
       <Flex gap={"small"} justify={"space-between"} align={"center"}>
         <Text>{index + 1})</Text>
         <Text>{participant.name}</Text>
-        <div>
-          <Divider type={"vertical"} />
-          <Text>{participant.initiative}</Text>
-        </div>
+        {!isEditMode && (
+          <div>
+            <Divider type={"vertical"} />
+            <Text>{participant.initiative}</Text>
+          </div>
+        )}
       </Flex>
     </Button>
   );

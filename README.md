@@ -10,3 +10,5 @@ todo:
 - [ ] add 2nd mode to add battles in addition to groups
 - [ ] remove group / battle
 
+known bugs:
+- [ ] if you toggle hide dead, the active player isn't selected anymore

@@ -98,13 +98,13 @@ export const PlayPage: FC = () => {
     setParticipantsGroup(updatedParticipantsGroup);
   };
 
-  const handleIniChange = (value: number | null, name: string) => {
+  const handleIniChange = (value: number | null, id: string) => {
     if (!participantsGroup || value === null) return;
 
     const updatedParticipants = participantsGroup[
       ParticipantsGroupFields.Participants
     ].map((participant) => {
-      if (participant.name === name) {
+      if (participant.id === id) {
         return { ...participant, initiative: value };
       }
       return participant;
@@ -128,6 +128,7 @@ export const PlayPage: FC = () => {
           initiative: 0,
           isDead: false,
           id: uuidv4(),
+          isCharacter: true,
         }),
       ),
     };
@@ -193,6 +194,7 @@ export const PlayPage: FC = () => {
               >
                 <ParticipantTable
                   handleIsDead={handleIsDead}
+                  onIniChange={handleIniChange}
                   participants={participantsGroup.participants}
                   setRound={setRoundCounter}
                   round={roundCounter}
@@ -237,31 +239,48 @@ export const PlayPage: FC = () => {
                 </Form>
                 <Divider />
                 <Form layout={"vertical"}>
-                  <Button onClick={() => setShowDead(!showDead)}>
-                    {showDead ? t("HideDead") : t("ShowDead")}
-                  </Button>
-                  <Button onClick={() => setIsEdit(!isEdit)}>
-                    {t("EditParticipants")}
-                  </Button>
-                  <Flex vertical gap={"middle"}>
-                    {group[GroupFields.Characters].map((character, index) => (
-                      <Flex
-                        key={character.name}
-                        justify={"end"}
-                        gap={"middle"}
-                        align={"center"}
+                  <Flex justify={"space-between"}>
+                    <Flex vertical gap={"middle"}>
+                      <Button onClick={() => setShowDead(!showDead)}>
+                        {showDead ? t("HideDead") : t("ShowDead")}
+                      </Button>
+                      <Button
+                        type={isEdit ? "primary" : "default"}
+                        onClick={() => setIsEdit(!isEdit)}
                       >
-                        <Typography.Text>{character.name}</Typography.Text>
-                        <Form.Item key={index} style={{ margin: 0, width: 80 }}>
-                          <InputNumber
-                            controls={false}
-                            onChange={(value) =>
-                              handleIniChange(value as number, character.name)
-                            }
-                          />
-                        </Form.Item>
-                      </Flex>
-                    ))}
+                        {t("EditParticipants")}
+                      </Button>
+                    </Flex>
+                    <Flex vertical gap={"middle"}>
+                      {participantsGroup[ParticipantsGroupFields.Participants]
+                        .filter((p: IParticipant) => p.isCharacter)
+                        .map((participant, index) => (
+                          <Flex
+                            key={participant.name}
+                            justify={"end"}
+                            gap={"middle"}
+                            align={"center"}
+                          >
+                            <Typography.Text>
+                              {participant.name}
+                            </Typography.Text>
+                            <Form.Item
+                              key={index}
+                              style={{ margin: 0, width: 80 }}
+                            >
+                              <InputNumber
+                                controls={false}
+                                onChange={(value) =>
+                                  handleIniChange(
+                                    value as number,
+                                    participant.id,
+                                  )
+                                }
+                              />
+                            </Form.Item>
+                          </Flex>
+                        ))}
+                    </Flex>
                   </Flex>
                 </Form>
               </Card>

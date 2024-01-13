@@ -4,6 +4,7 @@ import { Button, Flex, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { ParticipantButton } from "./ParticipantButton.tsx";
 import { useTranslation } from "react-i18next";
+import { ParticipantEdit } from "./ParticipantEdit.tsx";
 
 interface IParticipantTableProps {
   participants?: IParticipant[] | null;
@@ -15,6 +16,7 @@ interface IParticipantTableProps {
   showDead: boolean;
   isEdit: boolean;
   onRemoveParticipant: (idToDelete: string) => void;
+  onIniChange: (ini: number | null, id: string) => void;
 }
 
 export const ParticipantTable: FC<IParticipantTableProps> = ({
@@ -27,6 +29,7 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
   showDead,
   isEdit,
   onRemoveParticipant,
+  onIniChange,
 }) => {
   const { t } = useTranslation();
 
@@ -95,16 +98,21 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
             <Flex gap={"middle"}>
               <ParticipantButton
                 style={{ flex: 1 }}
+                disabled={isEdit && participant.isCharacter}
                 handleIsDead={handleIsDead}
                 key={participant.id}
                 participant={participant}
                 index={index}
                 turn={turn - 1}
+                mode={isEdit && !participant.isCharacter ? "edit" : "play"}
               />
-              {isEdit && !participant.isCharacter && (
-                <Button
-                  onClick={() => onRemoveParticipant(participant.id)}
-                  icon={<DeleteOutlined />}
+              {isEdit && (
+                <ParticipantEdit
+                  participant={participant}
+                  onIniChange={onIniChange}
+                  onRemoveParticipant={() =>
+                    onRemoveParticipant(participant.id)
+                  }
                 />
               )}
             </Flex>
