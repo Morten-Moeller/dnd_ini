@@ -12,3 +12,4 @@ todo:
 
 known bugs:
 - [ ] if you toggle hide dead, the active player isn't selected anymore
+- [ ] if first player is dead, the round count didn't work
