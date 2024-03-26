@@ -4,9 +4,9 @@ todo:
 - [x] filter dead participants
 - [x] remove participants
 - [x] menu hide button for battle mode
-- [ ] edit participants
+- [x] edit participants
 - [ ] save round and turn to local storage
-- [ ] restore player ini on refresh
+- [x] restore player ini on refresh
 - [ ] add 2nd mode to add battles in addition to groups
 - [ ] remove group / battle
 
