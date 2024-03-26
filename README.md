@@ -13,4 +13,4 @@ todo:
 known bugs:
 - [ ] if you toggle hide dead, the active player isn't selected anymore
 - [ ] if first player is dead, the round count didn't work
-- [ ] sometimes the participant value clears itself, seams to be if the sorting hits
+- [x] sometimes the participant value clears itself, seams to be if the sorting hits
