@@ -28,11 +28,15 @@ export const PlayPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
-  const [round, setRound] = useState(1);
-  const [turn, setTurn] = useState(1);
-  const [showDead, setShowDead] = useState<boolean>(true);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [hideMenu, setHideMenu] = useState<boolean>(false);
+  const [gameStats, setGameStats] = useState({
+    round: 1,
+    turn: 1,
+  });
+  const [layoutOptions, setLayoutOptions] = useState({
+    showDead: true,
+    isEdit: false,
+    hideMenu: false,
+  });
   const [participantsGroup, setParticipantsGroup] =
     useState<IParticipantGroup | null>(null);
 
@@ -59,17 +63,19 @@ export const PlayPage: FC = () => {
       `${LocalStorageKeys.Participants}_${group[GroupFields.GroupName]}`,
     );
     if (participantsGroup) return setParticipantsGroup(participantsGroup);
+    const player = group[GroupFields.Characters].map(
+      (character: ICharacter) => ({
+        name: character.name,
+        initiative: 0,
+        isDead: false,
+        id: uuidv4(),
+        isCharacter: true,
+      }),
+    );
     const newParticipantsGroup: IParticipantGroup = {
-      groupName: group[GroupFields.GroupName], // Der Gruppenname aus dem `group` Objekt
-      participants: group[GroupFields.Characters].map(
-        (character: ICharacter) => ({
-          name: character.name,
-          initiative: 0,
-          isDead: false,
-          id: uuidv4(),
-          isCharacter: true,
-        }),
-      ),
+      [ParticipantsGroupFields.GroupName]: group[GroupFields.GroupName], // Der Gruppenname aus dem `group` Objekt
+      [ParticipantsGroupFields.Participants]: player,
+      [ParticipantsGroupFields.Player]: player,
     };
     setParticipantsGroup(newParticipantsGroup);
   }, []);
@@ -99,7 +105,8 @@ export const PlayPage: FC = () => {
   };
 
   const handleIniChange = (value: number | null, id: string) => {
-    if (!participantsGroup || value === null) return;
+    if (!participantsGroup || value === null)
+      return console.log(value, participantsGroup);
 
     const updatedParticipants = participantsGroup[
       ParticipantsGroupFields.Participants
@@ -120,21 +127,22 @@ export const PlayPage: FC = () => {
 
   const clearParticipants = () => {
     if (!participantsGroup) return;
+    const player = group[GroupFields.Characters].map(
+      (character: ICharacter) => ({
+        name: character.name,
+        initiative: 0,
+        isDead: false,
+        id: uuidv4(),
+        isCharacter: true,
+      }),
+    );
     const newParticipantsGroup: IParticipantGroup = {
-      groupName: group[GroupFields.GroupName], // Der Gruppenname aus dem `group` Objekt
-      participants: group[GroupFields.Characters].map(
-        (character: ICharacter) => ({
-          name: character.name,
-          initiative: 0,
-          isDead: false,
-          id: uuidv4(),
-          isCharacter: true,
-        }),
-      ),
+      [ParticipantsGroupFields.GroupName]: group[GroupFields.GroupName], // Der Gruppenname aus dem `group` Objekt
+      [ParticipantsGroupFields.Participants]: player,
+      [ParticipantsGroupFields.Player]: player,
     };
     setParticipantsGroup(newParticipantsGroup);
-    setRound(1);
-    setTurn(1);
+    setGameStats({ round: 1, turn: 1 });
   };
 
   const handleIsDead = (participant: IParticipant, isDead: boolean) => {
@@ -155,6 +163,26 @@ export const PlayPage: FC = () => {
     setParticipantsGroup(updatedParticipantsGroup);
   };
 
+  const setShowDead = (bool: boolean) => {
+    setLayoutOptions({ ...layoutOptions, showDead: bool });
+  };
+
+  const setIsEdit = (bool: boolean) => {
+    setLayoutOptions({ ...layoutOptions, isEdit: bool });
+  };
+
+  const setHideMenu = (bool: boolean) => {
+    setLayoutOptions({ ...layoutOptions, hideMenu: bool });
+  };
+
+  const setTurn = (turn: number) => {
+    setGameStats({ ...gameStats, turn });
+  };
+
+  const setRound = (round: number) => {
+    setGameStats({ ...gameStats, round });
+  };
+
   const handleDeleteParticipant = (idToDelete: string) => {
     if (!participantsGroup) return;
     const updatedParticipants = participantsGroup.participants.filter(
@@ -164,6 +192,8 @@ export const PlayPage: FC = () => {
       [ParticipantsGroupFields.GroupName]:
         participantsGroup[ParticipantsGroupFields.GroupName],
       [ParticipantsGroupFields.Participants]: updatedParticipants,
+      [ParticipantsGroupFields.Player]:
+        participantsGroup[ParticipantsGroupFields.Player],
     });
   };
 
@@ -181,7 +211,7 @@ export const PlayPage: FC = () => {
           level={4}
           style={{ textAlign: "center", margin: "8px 0 24px 0" }}
         >
-          {t("Round")}: {round}
+          {t("Round")}: {gameStats.round}
         </Typography.Title>
         <Flex gap={"middle"}>
           <section style={{ flexBasis: 450 }}>
@@ -197,23 +227,23 @@ export const PlayPage: FC = () => {
                   onIniChange={handleIniChange}
                   participants={participantsGroup.participants}
                   setRound={setRound}
-                  round={round}
-                  turn={turn}
+                  round={gameStats.round}
+                  turn={gameStats.turn}
                   setTurn={setTurn}
-                  showDead={showDead}
-                  isEdit={isEdit}
+                  showDead={layoutOptions.showDead}
+                  isEdit={layoutOptions.isEdit}
                   onRemoveParticipant={handleDeleteParticipant}
                 />
                 <Button
                   style={{ marginTop: "auto" }}
-                  onClick={() => setHideMenu(!hideMenu)}
+                  onClick={() => setHideMenu(!layoutOptions.hideMenu)}
                 >
                   Toggle Menu
                 </Button>
               </Flex>
             </Card>
           </section>
-          {!hideMenu && (
+          {!layoutOptions.hideMenu && (
             <aside style={{ flex: 1 }}>
               <Card style={{ minHeight: 400 }}>
                 <Form layout={"vertical"} onFinish={addItem}>
@@ -241,20 +271,21 @@ export const PlayPage: FC = () => {
                 <Form layout={"vertical"}>
                   <Flex justify={"space-between"}>
                     <Flex vertical gap={"middle"}>
-                      <Button onClick={() => setShowDead(!showDead)}>
-                        {showDead ? t("HideDead") : t("ShowDead")}
+                      <Button
+                        onClick={() => setShowDead(!layoutOptions.showDead)}
+                      >
+                        {layoutOptions.showDead ? t("HideDead") : t("ShowDead")}
                       </Button>
                       <Button
-                        type={isEdit ? "primary" : "default"}
-                        onClick={() => setIsEdit(!isEdit)}
+                        type={layoutOptions.isEdit ? "primary" : "default"}
+                        onClick={() => setIsEdit(!layoutOptions.isEdit)}
                       >
                         {t("EditParticipants")}
                       </Button>
                     </Flex>
                     <Flex vertical gap={"middle"}>
-                      {participantsGroup[ParticipantsGroupFields.Participants]
-                        .filter((p: IParticipant) => p.isCharacter)
-                        .map((participant, index) => (
+                      {participantsGroup[ParticipantsGroupFields.Player]?.map(
+                        (participant, index) => (
                           <Flex
                             key={participant.name}
                             justify={"end"}
@@ -270,16 +301,23 @@ export const PlayPage: FC = () => {
                             >
                               <InputNumber
                                 controls={false}
+                                value={
+                                  participantsGroup[
+                                    ParticipantsGroupFields.Participants
+                                  ].find((p) => p.id === participant.id)
+                                    ?.initiative || 0
+                                }
                                 onChange={(value) =>
                                   handleIniChange(
-                                    value as number,
+                                    value as number | null,
                                     participant.id,
                                   )
                                 }
                               />
                             </Form.Item>
                           </Flex>
-                        ))}
+                        ),
+                      )}
                     </Flex>
                   </Flex>
                 </Form>

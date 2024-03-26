@@ -1,4 +1,13 @@
-import { Button, Card, Flex, Select, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Flex,
+  List,
+  Modal,
+  Popover,
+  Select,
+  Typography,
+} from "antd";
 import { FC, useEffect, useMemo, useState } from "react";
 import { IGroup } from "../types/IGroup.ts";
 import { useTranslation } from "react-i18next";
@@ -10,10 +19,17 @@ import { fromLocalStorage, toLocalStorage } from "../utils/localStorage.ts";
 import { LocalStorageKeys } from "../types/LocalStorageKeys.ts";
 
 export const LandingPage: FC = () => {
-  const { Title } = Typography;
+  const { Title, Text } = Typography;
   const [openGroup, setOpenGroup] = useState(false);
   const [groups, setGroups] = useState<IGroup[]>([]);
+  const [showKnownIssues, setShowKnownIssues] = useState(false);
   const navigate = useNavigate();
+
+  const knownIssues = [
+    "if you toggle hide dead, the active player isn't selected anymore",
+    "if first player is dead, the round count didn't work",
+    "and many more...",
+  ];
 
   useEffect(() => {
     const groups = fromLocalStorage(LocalStorageKeys.Groups);
@@ -99,8 +115,23 @@ export const LandingPage: FC = () => {
           </aside>
         </Flex>
       </Flex>
-      <Flex justify={"center"} style={{ marginTop: 24 }}>
-        <Typography.Text type={"secondary"}>v0.0.1</Typography.Text>
+      <Flex justify={"space-around"} align={"center"} style={{ marginTop: 24 }}>
+        <Text type={"secondary"}>v0.0.1</Text>
+        <Popover
+          content={
+            <List
+              dataSource={knownIssues}
+              renderItem={(item) => <List.Item>{item}</List.Item>}
+            />
+          }
+          trigger={"click"}
+          open={showKnownIssues}
+          onOpenChange={(newOpen) => setShowKnownIssues(newOpen)}
+        >
+          <Button type={"text"}>
+            <Text type={"secondary"}>{t("KnownIssues")}</Text>
+          </Button>
+        </Popover>
       </Flex>
     </main>
   );

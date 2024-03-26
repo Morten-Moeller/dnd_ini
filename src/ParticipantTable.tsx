@@ -1,17 +1,16 @@
 import { IParticipant } from "./types/IParticipant.ts";
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import { Button, Flex, Spin } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
 import { ParticipantButton } from "./ParticipantButton.tsx";
 import { useTranslation } from "react-i18next";
 import { ParticipantEdit } from "./ParticipantEdit.tsx";
 
 interface IParticipantTableProps {
   participants?: IParticipant[] | null;
-  setRound: Dispatch<SetStateAction<number>>;
+  setRound: (round: number) => void;
   round: number;
   turn: number;
-  setTurn: Dispatch<SetStateAction<number>>;
+  setTurn: (turn: number) => void;
   handleIsDead: (participant: IParticipant, isDead: boolean) => void;
   showDead: boolean;
   isEdit: boolean;
@@ -54,7 +53,7 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
     setTurn(newTurn);
 
     if (newTurn === 1) {
-      setRound((round) => round + 1);
+      setRound(round + 1);
     }
   };
 
@@ -77,7 +76,7 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
     setTurn(newTurn);
 
     if (newTurn === totalParticipants) {
-      setRound((round) => round - 1);
+      setRound(round - 1);
     }
   };
 
@@ -95,12 +94,11 @@ export const ParticipantTable: FC<IParticipantTableProps> = ({
           .sort((a, b) => b.initiative - a.initiative)
           .filter(filterDead)
           .map((participant: IParticipant, index) => (
-            <Flex gap={"middle"}>
+            <Flex gap={"middle"} key={participant.id}>
               <ParticipantButton
                 style={{ flex: 1 }}
                 disabled={isEdit && participant.isCharacter}
                 handleIsDead={handleIsDead}
-                key={participant.id}
                 participant={participant}
                 index={index}
                 turn={turn - 1}

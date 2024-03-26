@@ -18,7 +18,8 @@
     "Name": "Name",
     "ShowDead": "ShowDead",
     "HideDead": "HideDead",
-    "EditParticipants": "Beteiligte bearbeiten"
+    "EditParticipants": "Beteiligte bearbeiten",
+    "KnownIssues": "Bekannte Fehler"
   },
   "validation": {
     "MissingName": "Charaktername fehlt"
