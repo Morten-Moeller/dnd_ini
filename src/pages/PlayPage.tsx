@@ -28,6 +28,10 @@ export const PlayPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [group, setGroup] = useState<IGroup | null>(null);
+  const [nameIncrement, setNameIncrement] = useState({
+    name: "",
+    number: 0,
+  });
   const [gameStats, setGameStats] = useState({
     round: 1,
     turn: 1,
@@ -83,10 +87,17 @@ export const PlayPage: FC = () => {
   if (!group || !participantsGroup) return <Spin />;
 
   const addItem = (values: { name: string; initiative: number }) => {
-    if (!participantsGroup) return;
+    if (!participantsGroup || !values.name) return;
+    let updatedIncrement = nameIncrement.number + 1;
+    if (nameIncrement.name.toLowerCase() !== values.name.toLowerCase()) {
+      setNameIncrement({ name: values.name, number: 1 });
+      updatedIncrement = 1;
+    } else {
+      setNameIncrement({ ...nameIncrement, number: updatedIncrement });
+    }
 
     const newParticipant: IParticipant = {
-      name: values.name,
+      name: `${values.name} ${updatedIncrement}`,
       initiative: values.initiative,
       isDead: false,
       id: uuidv4(),
