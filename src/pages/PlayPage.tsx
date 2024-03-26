@@ -97,7 +97,10 @@ export const PlayPage: FC = () => {
     }
 
     const newParticipant: IParticipant = {
-      name: `${values.name} ${updatedIncrement}`,
+      name:
+        updatedIncrement === 1
+          ? values.name
+          : `${values.name} ${updatedIncrement}`,
       initiative: values.initiative,
       isDead: false,
       id: uuidv4(),
@@ -154,6 +157,7 @@ export const PlayPage: FC = () => {
     };
     setParticipantsGroup(newParticipantsGroup);
     setGameStats({ round: 1, turn: 1 });
+    setNameIncrement({ name: "", number: 0 });
   };
 
   const handleIsDead = (participant: IParticipant, isDead: boolean) => {
