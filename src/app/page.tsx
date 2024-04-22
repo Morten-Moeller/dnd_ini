@@ -1,95 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import { Button, Card, Flex, Input, Select, Typography } from "antd";
+import { useState } from "react";
+import { useGroupStore } from "@/hooks/useGroupStore";
+import { useSessionStore } from "@/hooks/useSessionStore";
+import { useRouter } from "next/navigation";
+import { Group } from "@/types/Group";
+import { Routes } from "@/routing/Routes";
+import { NewGroupModal } from "@/components/NewGroupModal";
+import { SessionList } from "@/components/SessionList";
 
-export default function Home() {
+
+const StartPage = () => {
+  const [open, setOpen] = useState(false)
+  const addGroup = useGroupStore(state => state.addGroup)
+  const groups = useGroupStore(state => state.groups)
+  const newSession = useSessionStore(state => state.newSession)
+  const options = groups.map(group => ({label: group.name, value: group.id}))
+  const [selectedGroupId, setSelectedGroupId] = useState<string | undefined>(undefined)
+  const [sessionName, setSessionName] = useState('')
+  const router = useRouter()
+
+  const handleFinish = (values: Group) => {
+    addGroup(values)
+    setSelectedGroupId(values.id)
+  }
+
+  const { Paragraph, Title } = Typography
+
+  const handleStart = () => {
+    if (!selectedGroupId) return
+    const sessionId = newSession(selectedGroupId, sessionName)
+    router.push(Routes.Session(sessionId))
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <Flex vertical style={{ padding: 'var(--ant-padding)'}} gap={'middle'}>
+    <Card style={{maxWidth: 'max-content'}}>
+      <Title level={2}>Welcome to the DnD Initiative Manager</Title>
+      <Paragraph>
+        This is a simple application to help you manage initiative order in your DnD games.
+      </Paragraph>
+      <Paragraph>
+        To get started, click on the &quot;New Group&quot; button in the sidebar.
+      </Paragraph>
+    </Card>
+      <Flex gap={'large'}>
+        <Button type={'primary'} onClick={() => setOpen(!open)}>New Group</Button>
+        {groups.length > 0 && (
+            <Flex gap={'large'} style={{ marginLeft: 'auto'}}>
+              <Select placeholder={'Wähle eine Gruppe'} onChange={setSelectedGroupId} value={selectedGroupId} options={options}/>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+            </Flex>
+          )}
+      </Flex>
+      <NewGroupModal open={open} onOk={() => setOpen(false)} onCancel={() => setOpen(false)} onFinish={handleFinish} />
+      {selectedGroupId && (
+        <>
+          <SessionList groupId={selectedGroupId}/>
+          <Flex gap={'large'}>
+            <Input placeholder={'Session name'} value={sessionName} onChange={(e) => setSessionName(e.target.value)} /><Button disabled={!selectedGroupId || !sessionName} type={'primary'} onClick={handleStart}>Start new</Button>
+          </Flex>
+        </>)}
+    </Flex>
+  )
 }
+
+export default StartPage
