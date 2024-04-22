@@ -1,4 +1,4 @@
-import {Group} from "../types/Group.ts";
+import {Group} from "@/types/Group";
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 

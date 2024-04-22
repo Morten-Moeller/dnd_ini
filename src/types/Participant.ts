@@ -1,4 +1,4 @@
-import {Status} from "./Status.ts";
+import {Status} from "./Status";
 
 export type Participant = {
   // The id of the participant equals the character id if the participant is a character

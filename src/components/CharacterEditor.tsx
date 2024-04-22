@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useActiveSessionStore } from "../hooks/useActiveSessionStore.ts";
-import { useGroupStore } from "../hooks/useGroupStore.ts";
+import { useActiveSessionStore } from "@/hooks/useActiveSessionStore";
+import { useGroupStore } from "@/hooks/useGroupStore";
 import { Flex, InputNumber, Typography, Form } from "antd";
 
 export const CharacterEditor: FC = () => {

@@ -1,4 +1,4 @@
-import { useGroupStore } from "../hooks/useGroupStore.ts";
+import { useGroupStore } from "@/hooks/useGroupStore";
 import { FC } from "react";
 import { Button } from "antd";
 

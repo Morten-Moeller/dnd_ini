@@ -1,4 +1,4 @@
-import { useActiveSessionStore } from "../hooks/useActiveSessionStore.ts";
+import { useActiveSessionStore } from "@/hooks/useActiveSessionStore";
 import { Typography } from "antd";
 
 export const TurnCounter = () => {

@@ -1,8 +1,8 @@
-import { Participant } from "../types/Participant.ts";
+import { Participant } from "@/types/Participant";
 import { CSSProperties, FC } from "react";
 import { Button, Card, Flex, Form, Input, Typography } from "antd";
 import { SaveOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useActiveSessionStore } from "../hooks/useActiveSessionStore.ts";
+import { useActiveSessionStore } from "@/hooks/useActiveSessionStore";
 
 type ParticipantEntryProps = {
   participant: Participant;

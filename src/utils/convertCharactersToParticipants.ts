@@ -1,5 +1,5 @@
-import { Participant } from "../types/Participant.ts";
-import { Character } from "../types/Character.ts";
+import { Participant } from "@/types/Participant";
+import { Character } from "@/types/Character";
 
 export const convertCharactersToParticipants = (characters: Character[]): Participant[] => {
   return characters.map((character) => ({

@@ -1,6 +1,6 @@
 import { FC, Fragment } from "react";
 import { Button, Divider, Flex, Form, Input, Modal } from "antd";
-import { Group } from "../types/Group.ts";
+import { Group } from "@/types/Group";
 import { v4 as uuidv4 } from 'uuid';
 
 type NewGroupModalProps = {

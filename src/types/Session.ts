@@ -1,4 +1,4 @@
-import {Participant} from "./Participant.ts";
+import {Participant} from "./Participant";
 
 export type Session = {
   id: string,

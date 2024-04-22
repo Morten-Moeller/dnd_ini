@@ -1,8 +1,8 @@
-import { Participant } from "../types/Participant";
+import { Participant } from "@/types/Participant";
 
 import { create, StateCreator } from "zustand";
 import { useGroupStore } from "./useGroupStore";
-import { convertCharactersToParticipants } from "../utils/convertCharactersToParticipants";
+import { convertCharactersToParticipants } from "@/utils/convertCharactersToParticipants";
 import { useSessionStore } from "./useSessionStore";
 import { message } from "antd";
 

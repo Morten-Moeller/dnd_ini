@@ -1,7 +1,7 @@
 import { Typography, Form, Input, Flex, Button } from "antd";
 import { v4 as uuidv4 } from "uuid";
-import { useActiveSessionStore } from "../hooks/useActiveSessionStore.ts";
-import { Participant } from "../types/Participant.ts";
+import { useActiveSessionStore } from "@/hooks/useActiveSessionStore";
+import { Participant } from "@/types/Participant";
 import { useCallback } from "react";
 
 export const AddParticipant = () => {

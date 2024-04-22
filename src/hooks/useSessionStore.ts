@@ -1,6 +1,6 @@
 import {persist} from "zustand/middleware";
 import {create} from "zustand";
-import {Session} from "../types/Session.ts";
+import {Session} from "@/types/Session";
 import {v4 as uuidv4} from "uuid";
 
 export type SessionStore = {
